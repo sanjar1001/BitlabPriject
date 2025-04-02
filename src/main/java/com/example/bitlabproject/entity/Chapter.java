@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "Courses")
+@Table(name = "chapters")
 @Getter
 @Setter
 @NoArgsConstructor
