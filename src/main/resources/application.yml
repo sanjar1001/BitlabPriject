@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: https://github.com/sanjar1001/BitlabPriject
+    username: postgres
+    password: postgres
+  liquibase:
+    change-log: classpath:db/changelog/changelog-master.xml
