@@ -1,7 +1,8 @@
 spring:
   datasource:
-    url: https://github.com/sanjar1001/BitlabPriject
-    username: postgres
-    password: postgres
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/data
+    username: admin
+    password: asdasd
   liquibase:
     change-log: classpath:db/changelog/changelog-master.xml
