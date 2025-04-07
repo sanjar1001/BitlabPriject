@@ -20,8 +20,6 @@ public class CourseDto {
     private String description;
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
-
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Chapter> chapters;
 
 

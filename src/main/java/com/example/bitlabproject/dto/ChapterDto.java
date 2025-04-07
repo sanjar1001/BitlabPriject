@@ -22,8 +22,6 @@ public class ChapterDto {
     private Course course;
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
-
-    @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Lesson> lessons;
 
 }

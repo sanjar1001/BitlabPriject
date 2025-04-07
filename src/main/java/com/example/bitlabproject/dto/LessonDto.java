@@ -21,10 +21,7 @@ public class LessonDto {
     private int order;
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chapter_id", nullable = false)
-    private Chapter chapter;
+    private Chapter chapterId;
 
 
 
