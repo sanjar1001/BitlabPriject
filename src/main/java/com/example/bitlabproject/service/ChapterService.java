@@ -14,4 +14,8 @@ public interface ChapterService  {
 
     Chapter createChapter(long id, ChapterDto chapterDto) throws Exception;
 
+    Chapter updateChapter(long id, ChapterDto chapterDto) throws Exception;
+
+    Void deleteChapter(long id) throws Exception;
+
 }
