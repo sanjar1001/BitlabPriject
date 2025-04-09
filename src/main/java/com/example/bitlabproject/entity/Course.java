@@ -1,6 +1,7 @@
 package com.example.bitlabproject.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,13 +29,15 @@ public class Course {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "createdTime")
+    @Column(name = "created_time")
     private LocalDateTime createdTime;
 
-    @Column(name = "updatedTime")
+    @Column(name = "updated_time")
     private LocalDateTime updatedTime;
 
+
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Chapter> chapters;
 
 }

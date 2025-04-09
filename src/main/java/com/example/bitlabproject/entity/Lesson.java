@@ -38,10 +38,10 @@ public class Lesson {
     @JoinColumn(name = "chapter_id", nullable = false)
     private Chapter chapter;
 
-    @Column(name = "createdTime")
+    @Column(name = "created_time")
     private LocalDateTime createdTime;
 
-    @Column(name = "updatedTime")
+    @Column(name = "updated_time")
     private LocalDateTime updatedTime;
 
 }
