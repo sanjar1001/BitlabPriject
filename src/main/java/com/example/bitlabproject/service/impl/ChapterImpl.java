@@ -33,6 +33,28 @@ public class ChapterImpl implements ChapterService {
             return chapterReposiroty.save(chapter);
 
 
+    }// Создание Главы для курса.
+
+    @Override
+    public Chapter updateChapter(long id, ChapterDto chapterDto) throws Exception {
+
+        Chapter chapter = chapterReposiroty.findById(id)
+                .orElseThrow(() -> new NullPointerException("Глава который вы ищите " + id + " нету!"));
+
+        LocalDateTime now = LocalDateTime.now();
+
+        chapter.setName(chapterDto.getName());
+        chapter.setOrder(chapterDto.getOrder());
+        chapter.setUpdatedTime(now);
+        return chapterReposiroty.save(chapter);
+
+    } // Обновить данные Главы
+
+    @Override
+    public Void deleteChapter(long id) throws Exception {
+
+   return null;
     }
+
 
 }

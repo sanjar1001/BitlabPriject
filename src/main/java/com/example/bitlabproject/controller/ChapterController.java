@@ -19,12 +19,14 @@ public class ChapterController {
 
     private final ChapterService chapterService;
 
-
-
-
     @PostMapping("/chapter/create/{id}")
     public Chapter createChapter(@PathVariable long id, @RequestBody ChapterDto chapterDto) throws Exception {
         return chapterService.createChapter(id, chapterDto);
+    }//Создание новой главы для курса
+
+    @PatchMapping("/chapter/update/{id}")
+    public Chapter updateChapter(@PathVariable long id, @RequestBody ChapterDto chapterDto) throws Exception {
+        return chapterService.updateChapter(id, chapterDto);
     }
 
 }
