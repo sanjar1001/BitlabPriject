@@ -1,6 +1,8 @@
 package com.example.bitlabproject.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,12 +33,13 @@ public class Chapter {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)
+    @JsonBackReference
     private Course course;
 
-    @Column(name = "createdTime")
+    @Column(name = "created_time")
     private LocalDateTime createdTime;
 
-    @Column(name = "updatedTime")
+    @Column(name = "updated_time")
     private LocalDateTime updatedTime;
 
     @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL, orphanRemoval = true)
