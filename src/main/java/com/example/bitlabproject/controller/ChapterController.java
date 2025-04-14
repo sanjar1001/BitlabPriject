@@ -9,6 +9,7 @@ import com.example.bitlabproject.repository.CourseReposiroty;
 import com.example.bitlabproject.service.ChapterService;
 import com.example.bitlabproject.service.CourseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,11 @@ public class ChapterController {
 
     private final ChapterService chapterService;
 
+    @GetMapping("/chapter/get/{id}")
+    public ResponseEntity<?> getChapter(@PathVariable long id) throws Exception {
+        return chapterService.getChapterById(id);
+    }
+
     @PostMapping("/chapter/create/{id}")
     public Chapter createChapter(@PathVariable long id, @RequestBody ChapterDto chapterDto) throws Exception {
         return chapterService.createChapter(id, chapterDto);
@@ -28,5 +34,12 @@ public class ChapterController {
     public Chapter updateChapter(@PathVariable long id, @RequestBody ChapterDto chapterDto) throws Exception {
         return chapterService.updateChapter(id, chapterDto);
     }
+
+    @DeleteMapping("/chapter/delete/{id}")
+    public void deleteChapter(@PathVariable long id) throws Exception {
+        chapterService.deleteChapter(id);
+    }
+
+
 
 }

@@ -2,6 +2,7 @@ package com.example.bitlabproject.service.impl;
 
 import com.example.bitlabproject.dto.CourseDto;
 import com.example.bitlabproject.entity.Course;
+import com.example.bitlabproject.exception.NotFoundException;
 import com.example.bitlabproject.mapping.EntityMapping;
 import com.example.bitlabproject.repository.CourseReposiroty;
 import com.example.bitlabproject.service.CourseService;
@@ -22,15 +23,10 @@ public class CourseImpl implements CourseService {
 
     public CourseDto getCourseById(long id) throws Exception {
 
-        try {
             Course course = courseReposiroty.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Course not found"));
+                    .orElseThrow(() -> new NotFoundException("Не найдено"));
             return entityMapping.toDto(course);
-        }catch (EntityNotFoundException e){
-            throw new EntityNotFoundException("Этот курс не найден!");
-        }catch (Exception e){
-            throw new Exception("Ошибка");
-        }
+
     }
 
     @Override
@@ -51,13 +47,12 @@ public class CourseImpl implements CourseService {
         Course course = courseReposiroty.findById(id)
                 .orElseThrow(() -> new RuntimeException("Курс нету"));
 
-        if (course.getName() != null) {
+        if (courseDto.getName() != null) {
             course.setName(courseDto.getName());
         }
-        if (course.getDescription() != null) {
+        if (courseDto.getDescription() != null) {
             course.setDescription(courseDto.getDescription());
         }
-
         LocalDateTime now = LocalDateTime.now();
         course.setUpdatedTime(now);
 

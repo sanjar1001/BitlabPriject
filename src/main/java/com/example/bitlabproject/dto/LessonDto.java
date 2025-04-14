@@ -21,7 +21,7 @@ public class LessonDto {
     private int order;
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
-    private Chapter chapterId;
+    private Long chapterId;
 
 
 

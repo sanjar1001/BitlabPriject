@@ -26,6 +26,7 @@ public class CourseController {
 
     @GetMapping("/course/get/{id}")
     public CourseDto getCourse(@PathVariable long id) throws Exception {
+
         return courseService.getCourseById(id);
     }
 

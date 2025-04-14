@@ -2,6 +2,7 @@ package com.example.bitlabproject.dto;
 
 import com.example.bitlabproject.entity.Course;
 import com.example.bitlabproject.entity.Lesson;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

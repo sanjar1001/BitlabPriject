@@ -3,6 +3,8 @@ package com.example.bitlabproject.service.impl;
 import com.example.bitlabproject.dto.ChapterDto;
 import com.example.bitlabproject.entity.Chapter;
 import com.example.bitlabproject.entity.Course;
+import com.example.bitlabproject.exception.NotFoundException;
+import com.example.bitlabproject.mapping.EntityMapping;
 import com.example.bitlabproject.repository.ChapterReposiroty;
 import com.example.bitlabproject.repository.CourseReposiroty;
 import com.example.bitlabproject.service.ChapterService;
@@ -17,6 +19,7 @@ public class ChapterImpl implements ChapterService {
 
     private final ChapterReposiroty chapterReposiroty;
     private final CourseReposiroty courseReposiroty;
+    private final EntityMapping entityMapping;
 
     public Chapter createChapter(long id, ChapterDto chapterDto) throws Exception {
         Course course = courseReposiroty.findById(id)
@@ -43,17 +46,33 @@ public class ChapterImpl implements ChapterService {
 
         LocalDateTime now = LocalDateTime.now();
 
-        chapter.setName(chapterDto.getName());
-        chapter.setOrder(chapterDto.getOrder());
+        if (chapterDto.getName() != null) {
+            chapter.setName(chapterDto.getName());
+        }
+        if (chapterDto.getOrder() != 0){
+            chapter.setOrder(chapterDto.getOrder());
+        }
         chapter.setUpdatedTime(now);
         return chapterReposiroty.save(chapter);
 
-    } // Обновить данные Главы
+    } // Обновить значение Главы
 
     @Override
-    public Void deleteChapter(long id) throws Exception {
+    public void deleteChapter(long id) throws Exception {
+        Chapter chapter = chapterReposiroty.findById(id)
+                .orElseThrow(() -> new NotFoundException("Глава который вы хотите удалить " + id + " нету!"));
 
-   return null;
+        chapterReposiroty.deleteById(id);
+    } // Удаление Главы по ID
+
+    @Override
+    public ChapterDto getChapterById(long id) throws Exception {
+
+        Chapter chapter = chapterReposiroty.findById(id)
+                .orElseThrow(() -> new NotFoundException("Глава который ищите нету!"));
+
+        return entityMapping.toDto(chapter);
+
     }
 
 
