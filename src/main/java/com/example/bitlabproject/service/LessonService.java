@@ -1,17 +1,18 @@
 package com.example.bitlabproject.service;
 
 import com.example.bitlabproject.dto.LessonDto;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface LessonService {
 
-    LessonDto createLesson(long id, LessonDto lessonDto);
+    ResponseEntity<?> createLesson(long id, LessonDto lessonDto);
 
-    LessonDto findById(long id);
+    ResponseEntity<?> findById(long id);
 
-    void deleteLesson(long id);
+    ResponseEntity<?> deleteLesson(long id);
 
-    LessonDto updateLesson(long id, LessonDto lessonDto);
+    ResponseEntity<?> updateLesson(long id, LessonDto lessonDto);
 }
 

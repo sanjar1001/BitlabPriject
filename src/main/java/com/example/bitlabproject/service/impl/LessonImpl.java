@@ -12,7 +12,10 @@ import com.example.bitlabproject.repository.ChapterReposiroty;
 import com.example.bitlabproject.repository.LessonReposiroty;
 import com.example.bitlabproject.service.LessonService;
 import jakarta.persistence.EntityManager;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,14 +29,15 @@ public class LessonImpl implements LessonService {
     private final EntityMapping entityMapping;
 
 
+    @Override
+    public ResponseEntity<?> createLesson(long id, @Valid LessonDto lessonDto) {
 
-    public LessonDto createLesson(long id, LessonDto lessonDto) {
-
-        System.out.println(id);
-
+        if (id <= 0) {
+            throw new IllegalArgumentException("Неправильный ID главы. Он должен быть больше 0.");
+        }
 
         Chapter chapter = chapterReposiroty.findById(id)
-                .orElseThrow(() -> new NotFoundException("Такой главы не существует"));
+                .orElseThrow(() -> new NotFoundException("Глава с id " + id + " не существует"));
 
         LocalDateTime now = LocalDateTime.now();
         Lesson lesson = new Lesson();
@@ -43,28 +47,49 @@ public class LessonImpl implements LessonService {
         lesson.setOrder(lessonDto.getOrder());
         lesson.setCreatedTime(now);
         lesson.setChapter(chapter);
-        lessonReposiroty.save(lesson);
 
-        return entityMapping.toDto(lesson);
-    } // Создание Урока для главы
+        Lesson savedLesson = lessonReposiroty.save(lesson);
+        LessonDto savedLessonDto = entityMapping.toDto(savedLesson);
 
-    public LessonDto findById(long id) {
-
-        Lesson lesson =lessonReposiroty.findById(id)
-                .orElseThrow(() -> new NotFoundException("Нету такой главы"));
-
-        return entityMapping.toDto(lesson);
-    } //Найти Урока по Id
-
-    public void deleteLesson(long id) {
-        Lesson lesson = lessonReposiroty.findById(id)
-                .orElseThrow(() -> new NotFoundException("Курс который вы хотите удалить " + id + " нету!"));
-
-        lessonReposiroty.deleteById(id);
-    } // Удаление Урока по ID
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedLessonDto);
+    }
 
     @Override
-    public LessonDto updateLesson(long id, LessonDto lessonDto) {
+    public ResponseEntity<?> findById(long id) {
+
+        if (id <= 0) {
+            throw new IllegalArgumentException("Неправильный ID. Он должен быть больше 0.");
+        }
+
+        Lesson lesson = lessonReposiroty.findById(id)
+                .orElseThrow(() -> new NotFoundException("Урок с id " + id + " не найден"));
+
+        LessonDto lessonDto = entityMapping.toDto(lesson);
+        return ResponseEntity.ok(lessonDto);
+    }
+
+    @Override
+    public ResponseEntity<?> deleteLesson(long id) {
+
+        if (id <= 0) {
+            throw new IllegalArgumentException("Неправильный ID. Он должен быть больше 0.");
+        }
+
+        Lesson lesson = lessonReposiroty.findById(id)
+                .orElseThrow(() -> new NotFoundException("Урок с id " + id + " не найден"));
+
+        lessonReposiroty.deleteById(id);
+
+        return ResponseEntity.ok("Урок с id " + id + " успешно удален");
+    }
+
+    @Override
+    public ResponseEntity<?> updateLesson(long id, @Valid LessonDto lessonDto) {
+
+        if (id <= 0) {
+            throw new IllegalArgumentException("Неправильный ID. Он должен быть больше 0.");
+        }
+
         Lesson lesson = lessonReposiroty.findById(id)
                 .orElseThrow(() -> new NotFoundException("Урок с id " + id + " не найден"));
 
@@ -80,17 +105,16 @@ public class LessonImpl implements LessonService {
         if (lessonDto.getContent() != null) {
             lesson.setContent(lessonDto.getContent());
         }
-        if (lessonDto.getOrder() != 0) {  // Здесь ты можешь добавить проверку на значение
+        if (lessonDto.getOrder() != 0) {
             lesson.setOrder(lessonDto.getOrder());
         }
 
         // Обновляем время изменения
         lesson.setUpdatedTime(now);
 
-        // Сохраняем изменения
-        return entityMapping.toDto(lessonReposiroty.save(lesson));
+        Lesson updatedLesson = lessonReposiroty.save(lesson);
+        LessonDto updatedLessonDto = entityMapping.toDto(updatedLesson);
+
+        return ResponseEntity.ok(updatedLessonDto);
     }
-
-
-
 }
