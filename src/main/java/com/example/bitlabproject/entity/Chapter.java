@@ -31,7 +31,7 @@ public class Chapter {
     @Column(name = "order_number")
     private int order;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "course_id", nullable = false)
     @JsonBackReference
     private Course course;
@@ -43,6 +43,7 @@ public class Chapter {
     private LocalDateTime updatedTime;
 
     @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Lesson> lessons;
 
 }

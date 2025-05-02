@@ -1,21 +1,19 @@
 package com.example.bitlabproject.service;
 
 import com.example.bitlabproject.dto.ChapterDto;
-import com.example.bitlabproject.dto.CourseDto;
 import com.example.bitlabproject.entity.Chapter;
-import com.example.bitlabproject.entity.Course;
-import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public interface ChapterService  {
 
-    Chapter createChapter(long id, ChapterDto chapterDto) throws Exception;
+    ResponseEntity<?> createChapter(long id, ChapterDto chapterDto) throws Exception;
 
-    Chapter updateChapter(long id, ChapterDto chapterDto) throws Exception;
+    ResponseEntity<?> updateChapter(long id, ChapterDto chapterDto) throws Exception;
 
-    Void deleteChapter(long id) throws Exception;
+    ResponseEntity<?> deleteChapter(long id) throws Exception;
+
+    ResponseEntity<?> getChapterById(long id) throws Exception;
 
 }

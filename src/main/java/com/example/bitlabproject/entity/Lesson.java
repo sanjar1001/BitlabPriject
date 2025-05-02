@@ -1,6 +1,7 @@
 package com.example.bitlabproject.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,6 +37,7 @@ public class Lesson {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chapter_id", nullable = false)
+    @JsonBackReference
     private Chapter chapter;
 
     @Column(name = "created_time")
