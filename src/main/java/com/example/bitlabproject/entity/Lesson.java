@@ -35,7 +35,7 @@ public class Lesson {
     @Column(name = "order_number")
     private int order;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "chapter_id", nullable = false)
     @JsonBackReference
     private Chapter chapter;

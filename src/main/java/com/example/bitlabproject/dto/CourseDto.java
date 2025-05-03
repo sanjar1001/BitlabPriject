@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CourseDto {
 
+    private long courseId;
     private String name;
     private String description;
     private LocalDateTime createdTime;

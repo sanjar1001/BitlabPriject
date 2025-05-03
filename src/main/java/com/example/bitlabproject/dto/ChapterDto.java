@@ -24,7 +24,7 @@ public class ChapterDto {
     private String name;
     @Min(value = 1, message = "Порядок не должен ниже 1")
     private int order;
-    private Course course;
+    private long courseId;
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
     private List<Lesson> lessons;
