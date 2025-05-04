@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Настроим аппендер для вывода логов в консоль -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- Формат вывода -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %highlight(%-5level) [%cyan(%logger{36})] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Устанавливаем логгер для конкретного пакета -->
+    <logger name="com.example.bitlabproject" level="DEBUG" additivity="false"> <!-- Замените на ваш пакет -->
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <!-- Корневой логгер с уровнем INFO для всего приложения -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>
