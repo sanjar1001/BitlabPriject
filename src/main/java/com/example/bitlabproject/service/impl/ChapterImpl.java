@@ -54,7 +54,7 @@ public class ChapterImpl implements ChapterService {
 
         // Сохраняем главу в базе
         chapterReposiroty.save(chapter);
-        log.debug("Создана новая глава с именем: {} для курса {}", chapterDto.getName(), chapterDto.getOrder());  // Здесь выводим подробности созданной главы
+        log.debug("Создана новая глава с именем: {} для курса: {}", chapterDto.getName(), chapterDto.getCourseId());  // Здесь выводим подробности созданной главы
 
         return ResponseEntity.ok(chapter);
     } // Создание новой главы для курса
