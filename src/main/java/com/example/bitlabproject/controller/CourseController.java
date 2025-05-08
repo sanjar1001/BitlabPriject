@@ -3,7 +3,7 @@ package com.example.bitlabproject.controller;
 import com.example.bitlabproject.dto.CourseDto;
 import com.example.bitlabproject.entity.Course;
 import com.example.bitlabproject.mapping.EntityMapping;
-import com.example.bitlabproject.repository.CourseReposiroty;
+import com.example.bitlabproject.repository.CourseRepository;
 import com.example.bitlabproject.service.CourseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,17 +20,15 @@ import java.util.List;
 @Tag(name = "Курсы", description = "API для получение курса")
 public class CourseController {
 
-    private final CourseReposiroty courseReposiroty;
     private final CourseService courseService;
-    private final EntityMapping entityMapping;
 
     @Operation(summary = "Получить список курсов", description = "Возвращает список всех курсов.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Список курсов успешно получен")
     })
     @GetMapping("/course/get/list")
-    public List<Course> getCourseList() throws Exception {
-        return courseReposiroty.findAll();
+    public ResponseEntity<List<CourseDto>> getCourseList() throws Exception {
+        return courseService.getAllCourses();
     }
 
     @Operation(summary = "Получить курс по ID", description = "Возвращает информацию о курсе по его идентификатору.")
@@ -40,7 +38,7 @@ public class CourseController {
             @ApiResponse(responseCode = "400", description = "Неверный ID")
     })
     @GetMapping("/course/get/{id}")
-    public ResponseEntity<?> getCourse(@PathVariable long id) throws Exception {
+    public ResponseEntity<CourseDto> getCourse(@PathVariable long id) throws Exception {
 
         return courseService.getCourseById(id);
     }

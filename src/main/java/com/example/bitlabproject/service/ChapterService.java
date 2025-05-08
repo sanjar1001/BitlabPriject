@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 @Service
 public interface ChapterService  {
 
-    ResponseEntity<?> createChapter(long id, ChapterDto chapterDto) throws Exception;
+    ResponseEntity<ChapterDto> createChapter(long id, ChapterDto chapterDto) throws Exception;
 
-    ResponseEntity<?> updateChapter(long id, ChapterDto chapterDto) throws Exception;
+    ResponseEntity<ChapterDto> updateChapter(long id, ChapterDto chapterDto) throws Exception;
 
     ResponseEntity<?> deleteChapter(long id) throws Exception;
 
-    ResponseEntity<?> getChapterById(long id) throws Exception;
+    ResponseEntity<ChapterDto> getChapterById(long id) throws Exception;
 
 }

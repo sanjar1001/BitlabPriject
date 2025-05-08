@@ -1,7 +1,6 @@
 package com.example.bitlabproject.controller;
 
 import com.example.bitlabproject.dto.LessonDto;
-import com.example.bitlabproject.repository.LessonReposiroty;
 import com.example.bitlabproject.service.LessonService;
 import lombok.RequiredArgsConstructor;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "LessonController", description = "API для получение урока")
 public class LessonController {
 
-    private final LessonReposiroty lessonReposiroty;
     private final LessonService lessonService;
 
     @Operation(summary = "Создать урок", description = "Создание нового урока для определённой главы по ID.")
@@ -26,7 +24,7 @@ public class LessonController {
             @ApiResponse(responseCode = "400", description = "Ошибка валидации данных")
     })
     @PostMapping("/lesson/create/{id}")
-    public ResponseEntity<?> createLesson(@PathVariable long id, @RequestBody LessonDto lessonDto) throws Exception {
+    public ResponseEntity<LessonDto> createLesson(@PathVariable long id, @RequestBody LessonDto lessonDto) throws Exception {
 
         return lessonService.createLesson(id, lessonDto);
 

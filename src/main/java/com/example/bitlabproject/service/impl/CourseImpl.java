@@ -4,7 +4,7 @@ import com.example.bitlabproject.dto.CourseDto;
 import com.example.bitlabproject.entity.Course;
 import com.example.bitlabproject.exception.NotFoundException;
 import com.example.bitlabproject.mapping.EntityMapping;
-import com.example.bitlabproject.repository.CourseReposiroty;
+import com.example.bitlabproject.repository.CourseRepository;
 import com.example.bitlabproject.service.CourseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -22,10 +24,10 @@ import java.time.LocalDateTime;
 public class CourseImpl implements CourseService {
 
     private final Logger log = LoggerFactory.getLogger(ChapterImpl.class);
-    private final CourseReposiroty courseReposiroty;
+    private final CourseRepository courseRepository;
     private final EntityMapping entityMapping;
 
-    public ResponseEntity<?> getCourseById(long id) throws Exception {
+    public ResponseEntity<CourseDto> getCourseById(long id) throws Exception {
 
         // Проверка на неправильный id
         if (id <= 0) {
@@ -34,7 +36,7 @@ public class CourseImpl implements CourseService {
         }
 
         // Поиск курса по id
-        Course course = courseReposiroty.findById(id)
+        Course course = courseRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Ошибка: Курс с id {} не найден", id);  // ERROR: Если курс не найден
                     return new NotFoundException("Курс с id " + id + " не найден");
@@ -48,7 +50,38 @@ public class CourseImpl implements CourseService {
         return ResponseEntity.ok(courseDto);
     }
 
-    public ResponseEntity<?> createCourse(@Valid CourseDto courseDto) throws Exception {
+    @Override
+    public ResponseEntity<List<CourseDto>> getAllCourses() throws Exception {
+        // DEBUG: Начало выполнения метода
+        log.debug("Выполняется метод getAllCourses()");
+
+        try {
+            // Получаем все курсы из базы данных
+            List<Course> courses = courseRepository.findAll();
+
+            // Проверяем, есть ли курсы
+            if (courses.isEmpty()) {
+                log.warn("Список курсов пуст");  // WARN: Нет доступных курсов
+            } else {
+                log.debug("Найдено {} курсов", courses.size());  // DEBUG: Сколько курсов найдено
+            }
+
+            // Преобразуем список сущностей в DTO
+            List<CourseDto> courseDto = courses.stream()
+                    .map(entityMapping::toDto)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(courseDto);
+
+        } catch (Exception e) {
+            // ERROR: Ошибка при получении списка курсов
+            log.error("Ошибка при получении списка курсов: {}", e.getMessage(), e);
+            throw new Exception("Ошибка при получении курсов", e);
+        }
+    }
+
+
+    public ResponseEntity<CourseDto> createCourse(@Valid CourseDto courseDto) throws Exception {
 
         // Проверка на пустые данные
         if (courseDto == null) {
@@ -67,7 +100,7 @@ public class CourseImpl implements CourseService {
         course.setCreatedTime(now);
 
         // Сохранение курса
-        Course savedCourse = courseReposiroty.save(course);
+        Course savedCourse = courseRepository.save(course);
         CourseDto savedCourseDto = entityMapping.toDto(savedCourse);
 
         // DEBUG: Логируем сохранённый курс
@@ -76,7 +109,7 @@ public class CourseImpl implements CourseService {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCourseDto);
     }
 
-    public ResponseEntity<?> updateCourse(long id, @Valid CourseDto courseDto) throws Exception {
+    public ResponseEntity<CourseDto> updateCourse(long id, @Valid CourseDto courseDto) throws Exception {
 
         // Проверка на неправильный id
         if (id <= 0) {
@@ -85,7 +118,7 @@ public class CourseImpl implements CourseService {
         }
 
         // Поиск курса по id
-        Course course = courseReposiroty.findById(id)
+        Course course = courseRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Ошибка: Курс с id {} не найден", id);  // ERROR: Если курс не найден
                     return new NotFoundException("Курс с id " + id + " не найден");
@@ -106,7 +139,7 @@ public class CourseImpl implements CourseService {
         course.setUpdatedTime(now);
 
         // Сохранение обновлённого курса
-        Course updatedCourse = courseReposiroty.save(course);
+        Course updatedCourse = courseRepository.save(course);
         CourseDto updatedCourseDto = entityMapping.toDto(updatedCourse);
 
         // DEBUG: Логируем обновлённый курс
@@ -118,7 +151,7 @@ public class CourseImpl implements CourseService {
     public ResponseEntity<?> deleteCourse(long id) throws Exception {
 
         // Поиск курса по id
-        Course course = courseReposiroty.findById(id)
+        Course course = courseRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Ошибка: Курс с id {} не найден", id);  // ERROR: Если курс не найден
                     return new NotFoundException("Глава не найдена с id: " + id);
@@ -128,7 +161,7 @@ public class CourseImpl implements CourseService {
         log.info("Удаление курса с id: {}", id);
 
         // Удаление курса
-        courseReposiroty.deleteById(id);
+        courseRepository.deleteById(id);
 
         // DEBUG: Логируем информацию о удалённом курсе
         log.debug("Курс с id: {} успешно удалён", id);

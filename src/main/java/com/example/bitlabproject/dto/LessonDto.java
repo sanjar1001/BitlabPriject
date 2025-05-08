@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class LessonDto {
 
+    private Long id;
     private String name;
     private String description;
     private String content;

@@ -20,6 +20,7 @@ import java.util.List;
 @Builder
 public class ChapterDto {
 
+    private long id;
     @NotBlank(message = "имя не должно быть пустым")
     private String name;
     @Min(value = 1, message = "Порядок не должен ниже 1")

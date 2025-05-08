@@ -5,14 +5,13 @@ import com.example.bitlabproject.entity.Chapter;
 import com.example.bitlabproject.entity.Course;
 import com.example.bitlabproject.exception.NotFoundException;
 import com.example.bitlabproject.mapping.EntityMapping;
-import com.example.bitlabproject.repository.ChapterReposiroty;
-import com.example.bitlabproject.repository.CourseReposiroty;
+import com.example.bitlabproject.repository.ChapterRepository;
+import com.example.bitlabproject.repository.CourseRepository;
 import com.example.bitlabproject.service.ChapterService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,11 +23,11 @@ import java.time.LocalDateTime;
 public class ChapterImpl implements ChapterService {
 
     private final Logger log = LoggerFactory.getLogger(ChapterImpl.class);
-    private final ChapterReposiroty chapterReposiroty;
-    private final CourseReposiroty courseReposiroty;
+    private final ChapterRepository chapterRepository;
+    private final CourseRepository courseRepository;
     private final EntityMapping entityMapping;
 
-    public ResponseEntity<?> createChapter(long id, @Valid ChapterDto chapterDto) throws Exception {
+    public ResponseEntity<ChapterDto> createChapter(long id, @Valid ChapterDto chapterDto) throws Exception {
         log.info("Создается новая глава с именем: {}", chapterDto.getName());
 
         // Проверка на id
@@ -38,7 +37,7 @@ public class ChapterImpl implements ChapterService {
         }
 
         // Поиск курса по id
-        Course course = courseReposiroty.findById(id)
+        Course course = courseRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Курс с id {} не найден!", id);  // Логируем ошибку, если курс не найден
                     return new NotFoundException("Курс не найден: " + id);
@@ -53,20 +52,20 @@ public class ChapterImpl implements ChapterService {
         chapter.setCreatedTime(now);
 
         // Сохраняем главу в базе
-        chapterReposiroty.save(chapter);
+        chapterRepository.save(chapter);
         log.debug("Создана новая глава с именем: {} для курса: {}", chapterDto.getName(), chapterDto.getCourseId());  // Здесь выводим подробности созданной главы
 
-        return ResponseEntity.ok(chapter);
+        return ResponseEntity.status(HttpStatus.CREATED).body(chapterDto);
     } // Создание новой главы для курса
 
-    public ResponseEntity<?> updateChapter(long id, ChapterDto chapterDto) throws Exception {
+    public ResponseEntity<ChapterDto> updateChapter(long id, ChapterDto chapterDto) throws Exception {
 
         if (id <= 0) {
             log.error("Ошибка: Неверный id для обновления главы: {}", id);
             throw new IllegalArgumentException("Id не должен быть ниже 0");
         }
 
-        Chapter chapter = chapterReposiroty.findById(id)
+        Chapter chapter = chapterRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Глава с id {} не найдена", id);
                     return new NotFoundException("Глава не найдена с id: " + id);
@@ -84,17 +83,17 @@ public class ChapterImpl implements ChapterService {
             chapter.setOrder(chapterDto.getOrder());
         }
         chapter.setUpdatedTime(now);
-        chapterReposiroty.save(chapter);
+        chapterRepository.save(chapter);
 
         log.info("Глава с id: {} успешно обновлена", id);
 
-        return ResponseEntity.ok(chapter);
+        return ResponseEntity.ok(chapterDto);
     } // Обновление главы для курса
 
     public ResponseEntity<?> deleteChapter(long id) throws Exception {
 
         // Проверка на наличие главы с данным id
-        Chapter chapter = chapterReposiroty.findById(id)
+        Chapter chapter = chapterRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Ошибка: Глава с id {} не найдена", id);
                     return new NotFoundException("Глава не найдена с id: " + id);
@@ -104,7 +103,7 @@ public class ChapterImpl implements ChapterService {
         log.debug("Удаление главы с id: {}. Название: {}", id, chapter.getName());
 
         // Удаление главы
-        chapterReposiroty.deleteById(id);
+        chapterRepository.deleteById(id);
 
         // INFO: Логируем успешное удаление
         log.info("Глава с id: {} успешно удалена", id);
@@ -112,14 +111,14 @@ public class ChapterImpl implements ChapterService {
         return ResponseEntity.ok(chapter);
     } // Удаление главы
 
-    public ResponseEntity<?> getChapterById(long id) throws Exception {
+    public ResponseEntity<ChapterDto> getChapterById(long id) throws Exception {
 
         if (id <= 0) {
             log.error("Ошибка: Неправильный ввод данных id {}", id);
             throw new IllegalArgumentException("Неправильный ввод данных");
         }
 
-        Chapter chapter = chapterReposiroty.findById(id)
+        Chapter chapter = chapterRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Ошибка: Глава с id {} не найдена", id);
                     return new NotFoundException("Глава не найдена с id: " + id);

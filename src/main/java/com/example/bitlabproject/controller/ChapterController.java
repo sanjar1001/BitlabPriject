@@ -19,13 +19,13 @@ public class ChapterController {
 
     private final ChapterService chapterService;
 
-    @GetMapping("/chapter/get/{id}")
     @Operation(summary = "Получить главу по ID", description = "Возвращает информацию о главы по его идентификатору.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Глава найден"),
             @ApiResponse(responseCode = "404", description = "Глава не найден"),
             @ApiResponse(responseCode = "400", description = "Неверный ID")
     })
+    @GetMapping("/chapter/get/{id}")
     public ResponseEntity<?> getChapter(@PathVariable long id) throws Exception {
         return chapterService.getChapterById(id);
     }
