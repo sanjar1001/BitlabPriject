@@ -1,12 +1,55 @@
-  version: '3'
+version: '3'
+services:
+  postgres:
+    image: postgres
+    container_name: my-postgresql-database-container-1
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=asdasd
+      - POSTGRES_DB=data
 
-  services:
-    postgres:
-      image: postgres
-      container_name: my-postgresql-database-container-1
-      ports:
-        - "5432:5432"
-      environment:
-        - POSTGRES_USER=admin
-        - POSTGRES_PASSWORD=asdasd
-        - POSTGRES_DB=data
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.1
+    container_name: keycloak
+    command: start-dev
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL_HOST: postgres   # вот тут исправлено
+      KC_DB_URL_PORT: 5432
+      KC_DB_URL_DATABASE: data   # твоя база называется "data"
+      KC_DB_USERNAME: admin      # имя пользователя
+      KC_DB_PASSWORD: asdasd     # пароль
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
+  minio-service:
+    image: quay.io/minio/minio
+    container_name: 'minaio_service_container'
+    ports:
+      - 9000:9000
+      - 9001:9001
+    environment:
+      MINIO_ROOT_USER: rootadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"
+  minio-setup:
+    image: minio/mc
+    depends_on:
+      - minio-service
+    environment:
+      MC_HOST: http://rootadmin:minioadmin@minio-service:9000
+
+    entrypoint: >
+      /bin/sh -c "
+        echo Starting Minio...
+        mc alias set minio http://minio-service:9000 rootadmin minioadmin
+        mc mb minio/dev-bucket;
+        exit 0;
+      "
+      
+

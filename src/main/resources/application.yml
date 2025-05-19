@@ -4,5 +4,21 @@ spring:
     url: jdbc:postgresql://localhost:5432/data
     username: admin
     password: asdasd
+
   liquibase:
     change-log: classpath:db/changelog/changelog-master.xml
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081/realms/bitlab-realm
+
+keycloak:
+  url: http://localhost:8081
+  client: bitlab-client-service
+  realm: bitlab-realm
+  client-secret: YePgdjBsKHoM8oP2IS6M5E6WOJDZkFSM
+  username: super_admin
+  password: admin
+  grand_type: password

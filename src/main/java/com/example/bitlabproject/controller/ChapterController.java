@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -26,6 +27,7 @@ public class ChapterController {
             @ApiResponse(responseCode = "400", description = "Неверный ID")
     })
     @GetMapping("/chapter/get/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER', 'TEACHER')")
     public ResponseEntity<?> getChapter(@PathVariable long id) throws Exception {
         return chapterService.getChapterById(id);
     }
@@ -37,6 +39,7 @@ public class ChapterController {
             @ApiResponse(responseCode = "404", description = "Курс с таким ID не найден")
     })
     @PostMapping("/chapter/create/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<?> createChapter(@PathVariable long id, @RequestBody ChapterDto chapterDto) throws Exception {
         return chapterService.createChapter(id, chapterDto);
     }//Создание новой главы для курса
@@ -48,6 +51,7 @@ public class ChapterController {
             @ApiResponse(responseCode = "404", description = "Глава с таким ID не найдена")
     })
     @PatchMapping("/chapter/update/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<?> updateChapter(@PathVariable long id, @RequestBody ChapterDto chapterDto) throws Exception {
         return chapterService.updateChapter(id, chapterDto);
     }
@@ -59,6 +63,7 @@ public class ChapterController {
             @ApiResponse(responseCode = "404", description = "Глава с таким ID не найдена")
     })
     @DeleteMapping("/chapter/delete/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<?> deleteChapter(@PathVariable long id) throws Exception {
         return chapterService.deleteChapter(id);
     }

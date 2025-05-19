@@ -1,13 +1,17 @@
 package com.example.bitlabproject.mapping;
 
+import com.example.bitlabproject.dto.AttachmentDto;
 import com.example.bitlabproject.dto.ChapterDto;
 import com.example.bitlabproject.dto.CourseDto;
 import com.example.bitlabproject.dto.LessonDto;
+import com.example.bitlabproject.entity.Attachment;
 import com.example.bitlabproject.entity.Chapter;
 import com.example.bitlabproject.entity.Course;
 import com.example.bitlabproject.entity.Lesson;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+
+import java.util.List;
 
 
 @Mapper(componentModel = "spring")
@@ -32,5 +36,15 @@ public interface EntityMapping {
         @Mapping(target = "id", ignore = true)
         @Mapping(target = "chapter.id", source = "chapterId")
         Lesson toEntity(LessonDto lessonDto);
+
+        @Mapping(source = "lesson.id", target = "lessonId")
+        AttachmentDto toDto(Attachment attachment);
+
+        @Mapping(target = "id", ignore = true)
+        @Mapping(target = "lesson.id", source = "lessonId")
+        Attachment toEntity(AttachmentDto attachmentDto);
+
+        List<AttachmentDto> toDto(List<Attachment> attachments);
+
 
 }

@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class CourseController {
             @ApiResponse(responseCode = "200", description = "Список курсов успешно получен")
     })
     @GetMapping("/course/get/list")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER', 'TEACHER')")
     public ResponseEntity<List<CourseDto>> getCourseList() throws Exception {
         return courseService.getAllCourses();
     }
@@ -38,6 +40,7 @@ public class CourseController {
             @ApiResponse(responseCode = "400", description = "Неверный ID")
     })
     @GetMapping("/course/get/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER', 'TEACHER')")
     public ResponseEntity<CourseDto> getCourse(@PathVariable long id) throws Exception {
 
         return courseService.getCourseById(id);
@@ -49,6 +52,7 @@ public class CourseController {
             @ApiResponse(responseCode = "400", description = "Ошибка валидации данных")
     })
     @PostMapping("/course/create")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<?>  addCourse(@RequestBody CourseDto courseDto) throws Exception {
 
         return courseService.createCourse(courseDto);
@@ -62,6 +66,7 @@ public class CourseController {
             @ApiResponse(responseCode = "400", description = "Некорректные данные запроса")
     })
     @PatchMapping("/course/update/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<?>  updateCourse(@PathVariable long id, @RequestBody CourseDto courseDto) throws Exception {
         return courseService.updateCourse(id,courseDto);
     }
@@ -73,6 +78,7 @@ public class CourseController {
             @ApiResponse(responseCode = "400", description = "Некорректные данные запроса")
     })
     @DeleteMapping("/course/delete/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<?>  deleteCourse(@PathVariable long id) throws Exception {
         return courseService.deleteCourse(id);
     }

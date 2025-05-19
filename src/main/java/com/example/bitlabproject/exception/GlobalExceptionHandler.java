@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex) {
         Map<String, Object> error = new HashMap<>();
@@ -54,12 +53,23 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler({FileUploadException.class, FileDownloadException.class})
+    public ResponseEntity<?> handleFileErrors(RuntimeException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                "message", ex.getMessage(),
+                "status", 500,
+                "timestamp", LocalDateTime.now()
+        ));
+    }
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleGeneralException(Exception ex) {
-        Map<String, Object> error = new HashMap<>();
-        error.put("message", "Произошла ошибка: " + ex.getMessage());
-        error.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        error.put("timestamp", LocalDateTime.now());
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<?> handleGeneric(Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                "message", "Внутренняя ошибка сервера",
+                "details", ex.getMessage(),
+                "timestamp", LocalDateTime.now()
+        ));
     }
 }
+
+
